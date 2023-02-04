@@ -29,7 +29,7 @@ class SearchImage extends ContentComponent {
   displayImage(imageList) {
     const image = document.createElement('img');
     image.src = imageList[Math.floor(Math.random() * imageList.length)];
-    this.clearContent();
+    // this.clearContent();
     this.clearErrors();
     document.querySelector('#content').appendChild(image);
   }
@@ -39,6 +39,7 @@ class SearchImage extends ContentComponent {
     <form class="dog-search">
       <span class="search-icon"></span>
       <input type="text" id="dogSearchInput">
+      <input type="text" id="imageNumberInput" placeholder="1">
       <button type="submit">Search</button>
     </form>
     `;
@@ -46,12 +47,22 @@ class SearchImage extends ContentComponent {
     document.querySelector('.dog-search button').addEventListener('click', (event) => {
       // megakadályozzuk a form küldését
       event.preventDefault();
+      // Task 1
       const searchTerm = document.querySelector('#dogSearchInput').value.toLowerCase();
       if (!searchTerm) {
         this.displayError('Please enter a search term');
         return;
       }
-      this.getImages(searchTerm)
+      // Task 2
+      let count = document.querySelector('#imageNumberInput').value;
+      Number(count);
+      Math.floor(count);
+      if (!Number(count)) {
+        count = 1;
+      }
+      this.clearContent();
+      for (let i = 0; i < count; i++){
+        this.getImages(searchTerm)
         .then((imageList) => {
           if (imageList) {
             this.displayImage(imageList);
@@ -63,6 +74,19 @@ class SearchImage extends ContentComponent {
           this.displayError('Something went wrong. Please try again later.');
           console.error(error);
         });
+      }
+      // this.getImages(searchTerm)
+      //   .then((imageList) => {
+      //     if (imageList) {
+      //       this.displayImage(imageList);
+      //     } else {
+      //       this.displayError('Breed not found. Please try to list the breeds first.');
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     this.displayError('Something went wrong. Please try again later.');
+      //     console.error(error);
+      //   });
     });
   }
 }
