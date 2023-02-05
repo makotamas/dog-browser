@@ -33,6 +33,10 @@ class ListBreeds extends ContentComponent {
     const item = document.createElement('div');
     item.classList.add('breed-list-item');
     item.textContent = breedName;
+    // Task 5
+    item.addEventListener('click', () => {
+      document.dispatchEvent(new CustomEvent('onSearch', { detail: breedName }));
+    });
     document.querySelector('#content').appendChild(item);
   }
 
@@ -50,6 +54,37 @@ class ListBreeds extends ContentComponent {
       } else {
         this.createListItem(breed);
       }
+    }
+  }
+
+  handleSearch() {
+    // Task 1
+    const searchTerm = document.querySelector('#dogSearchInput').value.toLowerCase();
+    if (!searchTerm) {
+      this.displayError('Please enter a search term');
+      return;
+    }
+    // Task 2
+    let count = document.querySelector('#imageNumberInput').value;
+    Number(count);
+    Math.floor(count);
+    if (!Number(count)) {
+      count = 1;
+    }
+    this.clearContent();
+    for (let i = 0; i < count; i++) {
+      this.getImages(searchTerm)
+        .then((imageList) => {
+          if (imageList) {
+            this.displayImage(imageList);
+          } else {
+            this.displayError('Breed not found. Please try to list the breeds first.');
+          }
+        })
+        .catch((error) => {
+          this.displayError('Something went wrong. Please try again later.');
+          console.error(error);
+        });
     }
   }
 

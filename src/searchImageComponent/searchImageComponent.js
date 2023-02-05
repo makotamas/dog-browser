@@ -1,6 +1,6 @@
 import '../css/searchImageComponent.css';
 import ContentComponent from '../contentComponent/contentComponent.js';
-import LazyLoad from "vanilla-lazyload";
+import LazyLoad from 'vanilla-lazyload';
 import preloading from '../img/preloading.gif';
 
 class SearchImage extends ContentComponent {
@@ -31,7 +31,7 @@ class SearchImage extends ContentComponent {
   // Task 4
   displayImage(imageList) {
     const image = document.createElement('img');
-    image.classList.add("lazy");
+    image.classList.add('lazy');
     image.src = preloading;
     image.dataset.src = imageList[Math.floor(Math.random() * imageList.length)];
     new LazyLoad();
@@ -51,15 +51,15 @@ class SearchImage extends ContentComponent {
     `;
     document.querySelector('#header').insertAdjacentHTML('beforeend', markup);
     document.querySelector('.dog-search button').addEventListener('click', (event) => {
-      // megakadályozzuk a form küldését
       event.preventDefault();
-      // Task 1
-      const searchTerm = document.querySelector('#dogSearchInput').value.toLowerCase();
+      this.handleSearch();
+    });
+    document.addEventListener('onSearch', (e) => {
+      const searchTerm = e.detail.breedName;
       if (!searchTerm) {
         this.displayError('Please enter a search term');
         return;
       }
-      // Task 2
       let count = document.querySelector('#imageNumberInput').value;
       Number(count);
       Math.floor(count);
@@ -67,32 +67,20 @@ class SearchImage extends ContentComponent {
         count = 1;
       }
       this.clearContent();
-      for (let i = 0; i < count; i++){
+      for (let i = 0; i < count; i++) {
         this.getImages(searchTerm)
-        .then((imageList) => {
-          if (imageList) {
-            this.displayImage(imageList);
-          } else {
-            this.displayError('Breed not found. Please try to list the breeds first.');
-          }
-        })
-        .catch((error) => {
-          this.displayError('Something went wrong. Please try again later.');
-          console.error(error);
-        });
+          .then((imageList) => {
+            if (imageList) {
+              this.displayImage(imageList);
+            } else {
+              this.displayError('Breed not found. Please try to list the breeds first.');
+            }
+          })
+          .catch((error) => {
+            this.displayError('Something went wrong. Please try again later.');
+            console.error(error);
+          });
       }
-      // this.getImages(searchTerm)
-      //   .then((imageList) => {
-      //     if (imageList) {
-      //       this.displayImage(imageList);
-      //     } else {
-      //       this.displayError('Breed not found. Please try to list the breeds first.');
-      //     }
-      //   })
-      //   .catch((error) => {
-      //     this.displayError('Something went wrong. Please try again later.');
-      //     console.error(error);
-      //   });
     });
   }
 }
