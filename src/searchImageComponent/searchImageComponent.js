@@ -46,7 +46,10 @@ class SearchImage extends ContentComponent {
     document.querySelector('.dog-search button').addEventListener('click', (event) => {
       // megakadályozzuk a form küldését
       event.preventDefault();
-      const searchTerm = document.querySelector('#dogSearchInput').value.toLowerCase();
+      this.handleToSearch();
+    });
+    document.addEventListener('onSearch', (e) => {
+      const searchTerm = e.detail;
       if (!searchTerm) {
         this.displayError('Please enter a search term');
         return;
