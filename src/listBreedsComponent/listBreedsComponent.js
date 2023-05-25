@@ -8,12 +8,20 @@ class ListBreeds extends ContentComponent {
   }
 
   async getFullList() {
-    const response = await fetch('https://dog.ceo/api/breeds/list/all');
-    if (!response.ok) {
-      throw new Error('API response error');
+    // localStorage ellenőrzése
+    if (localStorage.getItem('dogBreedsList')) {
+      // Betöltés a localStorage-ról, amennyiben létezik
+      return JSON.parse(localStorage.getItem('dogBreedsList'));
+    } else {
+      // Ha nincs adat, lekérjük az API-ról
+      const response = await fetch('https://dog.ceo/api/breeds/list/all');
+      if (!response.ok) {
+        throw new Error('API response error');
+      }
+      const data = await response.json();
+      localStorage.setItem('dogBreedsList', JSON.stringify(data.message));
+      return data.message;
     }
-    const data = await response.json();
-    return data.message;
   }
 
   /**
